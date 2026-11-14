@@ -1,0 +1,14 @@
+{
+  "name": "field-form-paths",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.22.1 <23"
+  },
+  "scripts": {
+    "start": "node src/main.mjs",
+    "test": "node --test test/*.test.mjs",
+    "demo": "node scripts/demo.mjs"
+  }
+}
