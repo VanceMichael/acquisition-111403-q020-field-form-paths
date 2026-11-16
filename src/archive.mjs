@@ -4,6 +4,9 @@ import {join} from 'node:path';
 
 export const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 
+// 凭据标识由地址、状态与原文摘要决定，记录可凭它回查来源原文。
+export const receiptId = exchange => digest(Buffer.from(exchange.url + ':' + exchange.status + ':' + digest(exchange.bytes)));
+
 async function replace(path, bytes) {
   const temporary = path + '.' + randomUUID() + '.tmp';
   const handle = await open(temporary, 'wx', 0o600);
@@ -39,16 +42,16 @@ export async function openArchive(directory) {
         for (const exchange of exchanges) {
           const hash = digest(exchange.bytes);
           await replace(join(directory, 'objects', hash), exchange.bytes);
-          const receiptId = digest(Buffer.from(exchange.url + ':' + exchange.status + ':' + hash));
-          if (!next.exchanges.some(existing => existing.receiptId === receiptId)) {
-            next.exchanges.push({receiptId,url:exchange.url,status:exchange.status,contentType:exchange.contentType,hash});
+          const id = receiptId(exchange);
+          if (!next.exchanges.some(existing => existing.receiptId === id)) {
+            next.exchanges.push({receiptId:id,url:exchange.url,status:exchange.status,contentType:exchange.contentType,hash});
           }
         }
         for (const record of records) {
           if (typeof record.id !== 'string' || !record.id) throw new Error('资料必须有非空标识');
-          const revision = digest(Buffer.from(JSON.stringify(record)));
-          if (!next.records.some(existing => existing.id === record.id && existing.revision === revision)) {
-            next.records.push({...record,revision});
+          const contentRevision = digest(Buffer.from(JSON.stringify(record)));
+          if (!next.records.some(existing => existing.id === record.id && existing.contentRevision === contentRevision)) {
+            next.records.push({...record,contentRevision});
           }
         }
         await replace(indexPath, Buffer.from(JSON.stringify(next, null, 2)));
