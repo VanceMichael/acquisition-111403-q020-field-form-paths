@@ -2,6 +2,7 @@ import {createServer} from 'node:http';
 import {openArchive} from './archive.mjs';
 import {createClient} from './source.mjs';
 import {collect} from './reader.mjs';
+import {deriveOverview} from './lineage.mjs';
 
 export async function startIntake({origin,directory,port=0}) {
   const archive=await openArchive(directory);
@@ -12,9 +13,11 @@ export async function startIntake({origin,directory,port=0}) {
       if(request.method==='GET'&&path==='/health'){send({status:'运行中'});return;}
       if(request.method==='GET'&&path==='/records'){send(archive.records());return;}
       if(request.method==='GET'&&path==='/receipts'){send(archive.exchanges());return;}
+      if(request.method==='GET'&&path==='/overview'){send(deriveOverview(archive.records()));return;}
       if(request.method==='POST'&&path==='/collect'){
         const client=createClient(origin);const records=await collect(client);
-        send(await archive.commit(records,client.exchanges));return;
+        const stored=await archive.commit(records,client.exchanges);
+        send({...stored,instances:records.map(record=>({id:record.id,status:record.status,flags:record.flags}))});return;
       }
       send({message:'接口不存在'},404);
     } catch(error){send({message:error.message},502);}

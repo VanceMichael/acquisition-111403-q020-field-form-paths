@@ -95,6 +95,140 @@ export const routes=[
   }
 ];
 export const phases={
+  "media-late": [
+    {
+      "path": "/instances/i1",
+      "body": {
+        "instanceId": "i1",
+        "formVersion": "f1",
+        "revision": 1,
+        "answers": {
+          "hasWater": false
+        },
+        "askedPaths": [
+          "hasWater",
+          "samples[r1]/weight"
+        ],
+        "repeats": [
+          {
+            "instanceKey": "r1",
+            "answers": {
+              "weight": null
+            }
+          },
+          {
+            "instanceKey": "r2",
+            "answers": {
+              "weight": 2
+            }
+          }
+        ],
+        "deletedRepeatIds": [],
+        "media": [
+          {
+            "name": "photo",
+            "status": "available",
+            "url": "/media/photo"
+          }
+        ]
+      },
+      "method": "GET",
+      "status": 200,
+      "query": {},
+      "headers": {}
+    },
+    {
+      "path": "/media/photo",
+      "body": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aXioAAAAASUVORK5CYII=",
+      "method": "GET",
+      "status": 200,
+      "query": {},
+      "headers": {
+        "content-type": "image/png"
+      },
+      "encoding": "base64"
+    }
+  ],
+  "media-broken": [
+    {
+      "path": "/instances/i1",
+      "body": {
+        "instanceId": "i1",
+        "formVersion": "f1",
+        "revision": 1,
+        "answers": {
+          "hasWater": false
+        },
+        "askedPaths": [
+          "hasWater",
+          "samples[r1]/weight"
+        ],
+        "repeats": [
+          {
+            "instanceKey": "r1",
+            "answers": {
+              "weight": null
+            }
+          },
+          {
+            "instanceKey": "r2",
+            "answers": {
+              "weight": 2
+            }
+          }
+        ],
+        "deletedRepeatIds": [],
+        "media": [
+          {
+            "name": "photo",
+            "status": "available",
+            "url": "/media/absent"
+          }
+        ]
+      },
+      "method": "GET",
+      "status": 200,
+      "query": {},
+      "headers": {}
+    }
+  ],
+  "media-unreported": [
+    {
+      "path": "/instances/i1",
+      "body": {
+        "instanceId": "i1",
+        "formVersion": "f1",
+        "revision": 1,
+        "answers": {
+          "hasWater": false
+        },
+        "askedPaths": [
+          "hasWater",
+          "samples[r1]/weight"
+        ],
+        "repeats": [
+          {
+            "instanceKey": "r1",
+            "answers": {
+              "weight": null
+            }
+          },
+          {
+            "instanceKey": "r2",
+            "answers": {
+              "weight": 2
+            }
+          }
+        ],
+        "deletedRepeatIds": [],
+        "media": []
+      },
+      "method": "GET",
+      "status": 200,
+      "query": {},
+      "headers": {}
+    }
+  ],
   "revision": [
     {
       "path": "/instances/i1",
